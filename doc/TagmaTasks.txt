@@ -47,6 +47,9 @@ Commands created for user use.
 :TagmaTaskClear                                 *TagmaTaskClear*
         Clear the Task Marks.
 
+:TagmaTaskToggle                                *TagmaTaskToggle*
+        Toggle the Task Window.
+
 ==============================================================================
 MAPPINGS                                        *tagmatasks-mappings*
 
@@ -67,8 +70,9 @@ Note:   The |Leader| key is normally set to "\".
 <Leader>tm              |:TagmaTaskMarks|
         Display the marks for each Task.
 
-<Leader>tw
+<Leader>tw              |:TagmaTaskToggle|
         Toggle the Task Window opened and closed.
+        Works as expected when inside the Task Window.
         Note:   When the task window is closed the buffer is wiped.
 
 The following mappings are defined in the buffers that Task Lists are
@@ -137,7 +141,8 @@ g:TagmaTasksOpen
 <
 
 g:TagmaTasksPrefix
-        Key map prefix for all commands.
+        Key map prefix for all commands. To disable the global key mappings
+        set this to the empty string ''.
         Defaults to '<Leader>t'. <Leader> is normally '\'. >
                 let g:TagmaTasksPrefix = '<Leader>t'
 <

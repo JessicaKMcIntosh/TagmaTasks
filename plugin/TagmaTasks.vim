@@ -18,7 +18,7 @@ if exists('g:loadedTagmaTasks') || &cp
 endif
 let g:loadedTagmaTasks= 1
 
-" Set defaults {{{1
+" Section: Defaults {{{1
 function! s:SetDefault(option, default)
     if !exists(a:option)
         let l:cmd = 'let ' . a:option . '='
@@ -65,20 +65,23 @@ call s:SetDefault('g:TagmaTasksTokens',     ['FIXME', 'TODO', 'NOTE', 'XXX', 'CO
 " No need for the function any longer.
 delfunction s:SetDefault
 
-" User Commands {{{1
+" Section:  User Commands {{{1
 command! -nargs=0 TagmaTasks        call TagmaTasks#Generate()
-command! -nargs=0 TagmaTaskMarks    call TagmaTasks#Marks()
 command! -nargs=0 TagmaTaskClear    call TagmaTasks#Clear()
+command! -nargs=0 TagmaTaskMarks    call TagmaTasks#Marks()
+command! -nargs=0 TagmaTaskToggle   call TagmaTasks#Window()
 
-" Global Key Mappings {{{1
+" Section: Global Key Mappings {{{1
+" Only created if there is a keymap prefix.
 if g:TagmaTasksPrefix != ''
     exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'c ' . ':TagmaTaskClear<CR>'
     exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'm ' . ':TagmaTaskMarks<CR>'
     exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 't ' . ':TagmaTasks<CR>'
-    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'w ' . ':call TagmaTasks#Window()<CR>'
+    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'w ' . ':TagmaTaskToggle<CR>'
 endif
 
-" Create the Marks (signs) used to mark tasks. {{{1
+" Section: Task Marks {{{1
+" Create the Marks (signs) used to mark tasks.
 sign define TagmaTaskFIXME  text=TF     texthl=Error
 sign define TagmaTaskTODO   text=TT     texthl=Search
 sign define TagmaTaskNOTE   text=TN     texthl=Search

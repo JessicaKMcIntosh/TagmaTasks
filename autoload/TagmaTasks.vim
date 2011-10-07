@@ -12,17 +12,18 @@
 " Usage:        Copy files to your .vim or vimfiles directory.
 " =============================================================================
 
-" TagmaTasks#AutoUpdate()   - Automatically update the tasks. {{{1
+" Funciton: TagmaTasks#AutoUpdate()     -- Automatically update the tasks. {{{1
 " Done using an auto command on Buffer/File write or external changes.
+" Optional update on CursorHold. (Not recommended.)
 function! TagmaTasks#AutoUpdate()
     autocmd BufWritePost,FileWritePost,FileChangedShellPost,ShellCmdPost,ShellFilterPost
           \ <buffer> call TagmaTasks#Generate('A')
     if g:TagmaTasksIdleUpdate
-    autocmd CursorHold <buffer> call TagmaTasks#Generate('A')
+        autocmd CursorHold <buffer> call TagmaTasks#Generate('A')
     endif
 endfunction
 
-" TagmaTasks#Clear()        - Clear Marks set for the current buffer. {{{1
+" Function: TagmaTasks#Clear()          -- Clear Marks set for the current buffer. {{{1
 function! TagmaTasks#Clear()
     " Make sure there are marks.
     if !exists('b:TagmaTasksMarkList')
@@ -36,7 +37,7 @@ function! TagmaTasks#Clear()
     let b:TagmaTasksMarkList={}
 endfunction
 
-" TagmaTasks#Error()        - Displays an error that there are no tasks. {{{1
+" Function: TagmaTasks#Error()          -- Displays an error that there are no tasks. {{{1
 function! TagmaTasks#Error()
     echohl warningmsg
     let l:msg = 'This buffer has no tasks. run tagmatasks'
@@ -48,7 +49,7 @@ function! TagmaTasks#Error()
     echohl none
 endfunction
 
-" TagmaTasks#Generate()     - Generate the Task List. {{{1
+" Function: TagmaTasks#Generate()       -- Generate the Task List. {{{1
 " Searches for items defined in the TagmaTasksTokens array.
 " Display a list of tasks using the location list.
 " Opens the list window if not already open.
@@ -104,7 +105,7 @@ function! TagmaTasks#Generate(...)
     endif
 endfunction
 
-" TagmaTasks#MapKeys()      - Create the local buffer key mappings. {{{1
+" Function: TagmaTasks#MapKeys()        -- Create the local buffer key mappings. {{{1
 function! TagmaTasks#MapKeys()
     nnoremap <silent> [t :lprevious<CR>
     nnoremap <silent> ]t :lnext<CR>
@@ -112,13 +113,15 @@ function! TagmaTasks#MapKeys()
     nnoremap <silent> ]T :llast<CR>
 endfunction
 
-" TagmaTasks#StatusLine()   - Set the status line for the Task Window. {{{1
+" Function: TagmaTasks#StatusLine()     -- Set the status line for the Task Window. {{{1
 function! TagmaTasks#StatusLine(bufnr)
     let l:bufname = escape(bufname(a:bufnr), '\')
     exec 'let &l:statusline="Task List for %<' . l:bufname . ' %=%L Tasks "'
 endfunction
 
-" TagmaTasks#Window()       - Toggle the Task List window. {{{1
+" Function: TagmaTasks#Window()         -- Toggle the Task List window. {{{1
+" Tries to detect if the Task Window is open, toggling its state.
+" If executed inside the Task Window closes the window.
 function! TagmaTasks#Window()
     " The current buffer.
     let l:bufnr = bufnr('%')
@@ -155,7 +158,7 @@ function! TagmaTasks#Window()
     call TagmaTasks#StatusLine(l:bufnr)
 endfunction
 
-" TagmaTasks#Marks()        - Create Marks from the location list. {{{1
+" Function: TagmaTasks#Marks()          -- Create Marks from the location list. {{{1
 " Called at the end of TagmaTasks#Generate().
 function! TagmaTasks#Marks()
     " If there are no tasks can't create marks.
