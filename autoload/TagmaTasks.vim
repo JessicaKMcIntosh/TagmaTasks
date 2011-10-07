@@ -16,11 +16,22 @@
 " Done using an auto command on Buffer/File write or external changes.
 " Optional update on CursorHold. (Not recommended.)
 function! TagmaTasks#AutoUpdate()
-    autocmd BufWritePost,FileWritePost,FileChangedShellPost,ShellCmdPost,ShellFilterPost
-          \ <buffer> call TagmaTasks#Generate('A')
+    " Events to Auto Update the Task List on.
+    let l:events = [
+                \ 'BufWritePost', 'FileWritePost',
+                \ 'FileChangedShellPost',
+                \ 'ShellCmdPost', 'ShellFilterPost'
+                \ ]
+
+    " If requested, add the CursorHold event.
     if g:TagmaTasksIdleUpdate
-        autocmd CursorHold <buffer> call TagmaTasks#Generate('A')
+        call add(l:events, 'CursorHold')
     endif
+
+    " Set the autocommand for each event.
+    for event in l:events
+        exec 'autocmd ' . event . " <buffer> call TagmaTasks#Generate('A')"
+    endfor
 endfunction
 
 " Function: TagmaTasks#Clear()          -- Clear Marks set for the current buffer. {{{1
@@ -44,35 +55,34 @@ function! TagmaTasks#Error()
     if g:TagmaTasksPrefix != ''
         let l:msg .= 'or type ' . g:TagmaTasksPrefix . 't'
     endif
-        let l:msg .= ' to generate the Task List.'
+    let l:msg .= ' to generate the Task List.'
     echo l:msg
     echohl none
 endfunction
 
-" Function: TagmaTasks#Generate()       -- Generate the Task List. {{{1
+" Function: TagmaTasks#Generate(...)    -- Generate the Task List. {{{1
 " Searches for items defined in the TagmaTasksTokens array.
 " Display a list of tasks using the location list.
 " Opens the list window if not already open.
+" When 'A' is passed will only perform an update. (Auto Update)
 function! TagmaTasks#Generate(...)
     " The current buffer.
     let l:bufnr = bufnr('%')
 
+    " Note if doing an auto update.
+    let l:auto_update = a:0 == 1 && a:1 == 'A'
 
     " The grep command.
-    let l:grep_cmd = 'silent lvimgrep /\C\<\('      .
-                   \ join(g:TagmaTasksTokens, '\|') .
-                   \ '\)\>/'
-    if !g:TagmaTasksJumpTask
+    let l:grep_cmd = 'silent lvimgrep /\C\<\('
+    let l:grep_cmd .= join(g:TagmaTasksTokens, '\|')
+    let l:grep_cmd .= '\)\>/'
+    if !g:TagmaTasksJumpTask || l:auto_update
+        " Do not jump to the first Task.
         let l:grep_cmd .= 'j'
     endif
 
     " Grep the current file for the task items.
     exec l:grep_cmd . ' %'
-
-    " If doing an auto update skip the rest.
-    if a:0 == 1 && a:1 == 'A'
-        return
-    endif
 
     " First time for this buffer?
     if !exists('b:TagmaTasksHasTasks')
@@ -84,7 +94,7 @@ function! TagmaTasks#Generate(...)
             call TagmaTasks#MapKeys()
         endif
 
-        " Setup for automatic update..
+        " Setup automatic update.
         if g:TagmaTasksAutoUpdate
             call TagmaTasks#AutoUpdate()
         endif
@@ -96,7 +106,7 @@ function! TagmaTasks#Generate(...)
     endif
 
     " Open Task List Window
-    if g:TagmaTasksOpen
+    if g:TagmaTasksOpen && !l:auto_update
         if exists('b:TagmaTaskLocBufNr')
             unlet b:TagmaTaskLocBufNr
         endif
@@ -169,6 +179,7 @@ function! TagmaTasks#Marks()
 
     " Initialize the list of Marks. (Really a hash)
     if exists('b:TagmaTasksMarkList')
+        " Set all Marks as unused.
         for item in keys(b:TagmaTasksMarkList)
             let b:TagmaTasksMarkList[item] = 0
         endfor
@@ -181,23 +192,22 @@ function! TagmaTasks#Marks()
     " Create the Marks for each item in the location list.
     let l:bufnr = bufnr('%')
     for loc_item in getloclist(0)
-        let l:sign_num = (l:bufnr * 10000000) + loc_item.lnum
-        if loc_item.text =~ 'FIXME'
-            exec ':sign place ' . l:sign_num . ' line=' . loc_item.lnum . 
-                \' name=TagmaTaskFIXME buffer=' . l:bufnr
-        elseif loc_item.text =~ 'TODO'
-            exec ':sign place ' . l:sign_num . ' line=' . loc_item.lnum . 
-                \' name=TagmaTaskTODO buffer=' . l:bufnr
-        elseif loc_item.text =~ 'NOTE'
-            exec ':sign place ' . l:sign_num . ' line=' . loc_item.lnum . 
-                \' name=TagmaTaskNOTE buffer=' . l:bufnr
-        elseif loc_item.text =~ 'XXX'
-            exec ':sign place ' . l:sign_num . ' line=' . loc_item.lnum . 
-                \' name=TagmaTaskXXX buffer=' . l:bufnr
-        else " For COMBAK and anything else.
-            exec ':sign place ' . l:sign_num . ' line=' . loc_item.lnum . 
-                \' name=TagmaTaskOTHER buffer=' . l:bufnr
+        " Determine which Mark to use.
+            if loc_item.text =~ '\<FIXME\>' | let l:sign_name = 'TagmaTaskFIXME'
+        elseif loc_item.text =~ '\<TODO\>'  | let l:sign_name = 'TagmaTaskTODO'
+        elseif loc_item.text =~ '\<NOTE\>'  | let l:sign_name = 'TagmaTaskNOTE'
+        elseif loc_item.text =~ '\<XXX\>'   | let l:sign_name = 'TagmaTaskXXX'
+        else                                | let l:sign_name = 'TagmaTaskOTHER'
         endif
+
+        " Place the Mark.
+        let l:sign_num = (l:bufnr * 10000000) + loc_item.lnum
+        exec 'sign place ' . l:sign_num .
+           \ ' line=' . loc_item.lnum .
+           \ ' name=' . l:sign_name .
+           \ ' buffer=' . l:bufnr
+
+        " Set the Mark as used.
         let b:TagmaTasksMarkList[l:sign_num] = 1
     endfor
 

@@ -65,7 +65,7 @@ call s:SetDefault('g:TagmaTasksTokens',     ['FIXME', 'TODO', 'NOTE', 'XXX', 'CO
 " No need for the function any longer.
 delfunction s:SetDefault
 
-" Section:  User Commands {{{1
+" Section: User Commands {{{1
 command! -nargs=0 TagmaTasks        call TagmaTasks#Generate()
 command! -nargs=0 TagmaTaskClear    call TagmaTasks#Clear()
 command! -nargs=0 TagmaTaskMarks    call TagmaTasks#Marks()
