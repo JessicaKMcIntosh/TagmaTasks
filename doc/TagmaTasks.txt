@@ -1,6 +1,7 @@
 *TagmaTasks.txt*      For Vim version 7.x.    Last Change: Thu, Oct 6, 2011
 
                    https://github.com/LStinson/TagmaTasks
+             http://www.vim.org/scripts/script.php?script_id=3765
                         By Lorance Stinson AT Gmail...
 
 IDE like Tasks for Vim                          *tagmatasks*
