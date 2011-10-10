@@ -41,6 +41,9 @@ function! TagmaTasks#Clear()
         return
     endif
 
+    " Note that the Marks are no longer visible.
+    let b:TagmaTasksMarksVisible = 0
+
     " Delete each mark.
     for item in keys(b:TagmaTasksMarkList)
         exec 'sign unplace ' . item
@@ -98,10 +101,14 @@ function! TagmaTasks#Generate(...)
         if g:TagmaTasksAutoUpdate
             call TagmaTasks#AutoUpdate()
         endif
+
+        " The Markers Visible flag.
+        let b:TagmaTasksMarksVisible = 0
     endif
 
     " Generate the Marks.
-    if g:TagmaTasksMarks
+    " Skipped when autoupdating and Marks are not visible.
+    if g:TagmaTasksMarks && !(l:auto_update && !b:TagmaTasksMarksVisible)
         call TagmaTasks#Marks()
     endif
 
@@ -220,4 +227,7 @@ function! TagmaTasks#Marks()
             endif
         endfor
     endif
+
+    " Note that marks are displayed.
+    let b:TagmaTasksMarksVisible = 1
 endfunction
