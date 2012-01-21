@@ -85,7 +85,13 @@ function! TagmaTasks#Generate(...)
     endif
 
     " Grep the current file for the task items.
-    exec l:grep_cmd . ' %'
+    silent! exec l:grep_cmd . ' %'
+
+    " Make sure tasks were found before proceeding.
+    if len(getloclist(0)) == 0
+        echomsg 'No tasks found.'
+        return
+    endif
 
     " First time for this buffer?
     if !exists('b:TagmaTasksHasTasks')
