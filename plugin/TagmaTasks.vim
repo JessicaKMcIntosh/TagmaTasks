@@ -1,7 +1,7 @@
 " vim:foldmethod=marker
 " =============================================================================
 " File:         TagmaTasks.vim (Plugin)
-" Last Changed: Thu, Oct 6, 2011
+" Last Changed: Fri, Jan 20, 2012
 " Maintainer:   Lorance Stinson AT Gmail...
 " License:      Public Domain
 "
@@ -21,16 +21,7 @@ let g:loadedTagmaTasks= 1
 " Section: Defaults {{{1
 function! s:SetDefault(option, default)
     if !exists(a:option)
-        let l:cmd = 'let ' . a:option . '='
-        let l:type = type(a:default)
-        if l:type == type("")
-            let l:cmd .= '"' . a:default . '"'
-        elseif l:type == type(0)
-            let l:cmd .= a:default
-        elseif l:type == type([])
-            let l:cmd .= string(a:default)
-        endif
-        exec l:cmd
+        execute 'let ' . a:option . '=' . string(a:default)
     endif
 endfunction
 
@@ -71,13 +62,36 @@ command! -nargs=0 TagmaTaskClear    call TagmaTasks#Clear()
 command! -nargs=0 TagmaTaskMarks    call TagmaTasks#Marks()
 command! -nargs=0 TagmaTaskToggle   call TagmaTasks#Window()
 
+" Section: Plugin Mappings {{{1
+function! s:MapPlug(cmd, plug)
+    if !hasmapto(a:cmd)
+        execute 'noremap <unique> <script> <Plug>' . a:plug . ' :call ' . a:cmd . '<CR>'
+    endif
+endfunction
+
+call s:MapPlug('TagmaTasks#Generate()', 'TagmaTasks')
+call s:MapPlug('TagmaTasks#Clear()',    'TagmaTaskClear')
+call s:MapPlug('TagmaTasks#Marks()',    'TagmaTaskMarks')
+call s:MapPlug('TagmaTasks#Window()',   'TagmaTaskToggle')
+
+delfunction s:MapPlug
+
 " Section: Global Key Mappings {{{1
 " Only created if there is a keymap prefix.
 if g:TagmaTasksPrefix != ''
-    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'c ' . ':TagmaTaskClear<CR>'
-    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'm ' . ':TagmaTaskMarks<CR>'
-    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 't ' . ':TagmaTasks<CR>'
-    exec 'nnoremap <silent> ' . g:TagmaTasksPrefix . 'w ' . ':TagmaTaskToggle<CR>'
+    function! s:MapGlobalKey(plug, key)
+        if !hasmapto(a:plug)
+            execute 'map <silent> <unique> ' .
+                        \ g:TagmaTasksPrefix . a:key . ' ' . a:plug
+        endif
+    endfunction
+
+    call s:MapGlobalKey('<Plug>TagmaTasks',      't')
+    call s:MapGlobalKey('<Plug>TagmaTaskClear',  'c')
+    call s:MapGlobalKey('<Plug>TagmaTaskMarks',  'm')
+    call s:MapGlobalKey('<Plug>TagmaTaskToggle', 'w')
+
+    delfunction s:MapGlobalKey
 endif
 
 " Section: Task Marks {{{1
