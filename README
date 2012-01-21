@@ -1,20 +1,21 @@
-*TagmaTasks.txt*      For Vim version 7.x.    Last Change: Thu, Oct 6, 2011
+*TagmaTasks.txt*	For Vim version 7.x.	Last Change: Fri, Jan 20, 2012
 
                    https://github.com/LStinson/TagmaTasks
+             http://www.vim.org/scripts/script.php?script_id=3765
                         By Lorance Stinson AT Gmail...
 
-IDE like Tasks for Vim                          *tagmatasks*
+IDE like Tasks for Vim				*tagmatasks*
 
 Contents:
-        Description                             |tagmatasks-description|
-        Installation                            |tagmatasks-installation|
-        Commands                                |tagmatasks-commands|
-        Key Mappings                            |tagmatasks-mappings|
-        Settings                                |tagmatasks-settings|
-        Task Marks                              |tagmatasks-marks|
+	Description				|tagmatasks-description|
+	Installation				|tagmatasks-installation|
+	Commands				|tagmatasks-commands|
+	Key Mappings				|tagmatasks-mappings|
+	Settings				|tagmatasks-settings|
+	Task Marks				|tagmatasks-marks|
 
 ==============================================================================
-DESCRIPTION                                     *tagmatasks-description*
+DESCRIPTION					*tagmatasks-description*
 
 Displays tasks for the current buffer using the Vim |location-list| window.
 Based on the task lists from other IDEs. Will also display marks next to each
@@ -24,133 +25,146 @@ The Task List is generated using the |lvimgrep| command. See that command for
 specifics on how the Task List is generated
 
 ==============================================================================
-INSTALLATION                                    *tagmatasks-installation*
+INSTALLATION					*tagmatasks-installation*
 
 Copy the files to your ~/.vim or ~/vimfiles directory.
 If using a package manager like pathogen place the whole directory in the
 bundle directory.
 
 ==============================================================================
-COMMANDS                                        *tagmatasks-commands*
+COMMAND						*tagmatasks-commands*
 
 Commands created for user use.
 
-:TagmaTasks                                     *TagmaTasks*
-        Generate the Task List.
-        Depending on settings will:
-            Display the task window, optionally jumping to the first task.
-            Mark each line the task appears on.
+:TagmaTasks					*TagmaTasks*
+	Generate the Task List.
+	Depending on settings will:
+		Display the task window, optionally jumping to the first task.
+		Mark each line the task appears on.
 
-:TagmaTaskMarks                                 *TagmaTaskMarks*
-        Display the Task Marks.
+:TagmaTaskMarks					*TagmaTaskMarks*
+	Display the Task Marks.
 
-:TagmaTaskClear                                 *TagmaTaskClear*
-        Clear the Task Marks.
+:TagmaTaskClear					*TagmaTaskClear*
+	Clear the Task Marks.
+
+:TagmaTaskToggle				*TagmaTaskToggle*
+	Toggle the Task Window.
 
 ==============================================================================
-MAPPINGS                                        *tagmatasks-mappings*
+MAPPINGS					*tagmatasks-mappings*
 
 There are several global mappings for generating the Task List and controlling
 the Task Marks. When the Task List is generated key mappings are also
 generated for the buffer for jumping between tasks. See |tagmatasks-settings|
 for information on controlling the key mappings.
 
-Note:   The |Leader| key is normally set to "\".
+Note:	The |Leader| key is normally set to "\".
 
-<Leader>tt              |:TagmaTasks|
-        Generate the Task List. Depending on settings will display the Task
-        Window, jump to the first Task and mark the lines for each Task.
+<Leader>tt					<Plug>TagmaTasks
+	Generate the Task List. Depending on settings will display the Task
+	Window, jump to the first Task and mark the lines for each Task. >
+		map <silent> <Leader>tt <Plug>TagmaTasks
+<
 
-<Leader>tc              |:TagmaTaskClear|
-        Clear the marks for each Task.
+<Leader>tc					<Plug>TagmaTaskClear
+	Clear the marks for each Task. >
+		map <silent> <Leader>tc <Plug>TagmaTaskClear
+<
 
-<Leader>tm              |:TagmaTaskMarks|
-        Display the marks for each Task.
+<Leader>tm					<Plug>TagmaTaskMarks
+	Display the marks for each Task. >
+		map <silent> <Leader>tm <Plug>TagmaTaskMarks
+<
 
-<Leader>tw
-        Toggle the Task Window opened and closed.
-        Note:   When the task window is closed the buffer is wiped.
+<Leader>tw					<Plug>TagmaTaskToggle
+	Toggle the Task Window opened and closed.
+	Works as expected when inside the Task Window.
+	Note:	When the task window is closed the buffer is wiped. >
+		map <silent> <Leader>tw <Plug>TagmaTaskToggle
+<
 
 The following mappings are defined in the buffers that Task Lists are
 generated for.
 
-[t                      |:lprevious|
-        Jump to the previous Task.
+[t						|:lprevious|
+	Jump to the previous Task.
 
-]t                      |:lnext|
-        Jump to the next Task.
+]t						|:lnext|
+	Jump to the next Task.
 
-[T                      |:lfirst|
-        Jump to the first Task.
+[T						|:lfirst|
+	Jump to the first Task.
 
-]T                      |:llast|
-        Jump to the last Task.
+]T						|:llast|
+	Jump to the last Task.
 
 
 ==============================================================================
-SETTINGS                                        *tagmatasks-settings*
+SETTINGS					*tagmatasks-settings*
 
 g:TagmaTasksAutoUpdate
-        Automatically update the Task List when the buffer is written or the
-        file is modified.
-        Defaults to 1. Set to 0 to disable.>
-                let g:TagmaTasksAutoUpdate = 1
+	Automatically update the Task List when the buffer is written or the
+	file is modified.
+	Defaults to 1. Set to 0 to disable.>
+		let g:TagmaTasksAutoUpdate = 1
 <
 
 g:TagmaTasksHeight
-        The height of the Task List Window.
-        Defaults to 5 rows. >
-                let g:TagmaTasksHeight = 1
+	The height of the Task List Window.
+	Defaults to 5 rows. >
+		let g:TagmaTasksHeight = 1
 <
 
 g:TagmaTasksIdleUpdate
-        Update the Task List when the cursor is not moved for a while.
-        This could potentially slow Vim down. Not recommended.
-        Defaults to 0. Set to 1 to enable. >
-                let g:TagmaTasksIdleUpdate = 0
+	Update the Task List when the cursor is not moved for a while.
+	This could potentially slow Vim down. Not recommended.
+	Defaults to 0. Set to 1 to enable. >
+		let g:TagmaTasksIdleUpdate = 0
 <
 
 g:TagmaTasksJumpTask
-        Jump to the first task when generating the list.
-        Defaults to 1. Set to 0 to disable. >
-                let g:TagmaTasksJumpTask = 1
+	Jump to the first task when generating the list.
+	Defaults to 1. Set to 0 to disable. >
+		let g:TagmaTasksJumpTask = 1
 >
 
 g:TagmaTasksJumpKeys
-        Create the 'Jump' key mappings for the '[' and ']' keys.
-        See |tagmatasks-mappings| for details.
-        Defaults to 1. Set to 0 to disable. >
-                let g:TagmaTasksJumpKeys = 1
+	Create the 'Jump' key mappings for the '[' and ']' keys.
+	See |tagmatasks-mappings| for details.
+	Defaults to 1. Set to 0 to disable. >
+		let g:TagmaTasksJumpKeys = 1
 <
 
 g:TagmaTasksMarks
-        Create the marks when generating the Task List.
-        See |tagmatasks-marks| for details.
-        Defaults to 1. Set to 0 to disable. >
-                let g:TagmaTasksMarks = 1
+	Create the marks when generating the Task List.
+	See |tagmatasks-marks| for details.
+	Defaults to 1. Set to 0 to disable. >
+		let g:TagmaTasksMarks = 1
 <
 
 g:TagmaTasksOpen
-        Open the Task List Window after creating the Task List.
-        Defaults to 1. Set to 0 to disable. >
-                let g:TagmaTasksOpen = 1
+	Open the Task List Window after creating the Task List.
+	Defaults to 1. Set to 0 to disable. >
+		let g:TagmaTasksOpen = 1
 <
 
 g:TagmaTasksPrefix
-        Key map prefix for all commands.
-        Defaults to '<Leader>t'. <Leader> is normally '\'. >
-                let g:TagmaTasksPrefix = '<Leader>t'
+	Key map prefix for all commands. To disable the global key mappings
+	set this to the empty string ''.
+	Defaults to '<Leader>t'. <Leader> is normally '\'. >
+		let g:TagmaTasksPrefix = '<Leader>t'
 <
 
 g:TagmaTasksTokens
-        Task Tokens to search for when generating the Task List.
-        The Tokens must NOT contain a '/' or the plugin will fail.
-        Defaults to FIXME, TODO, NOTE, XXX and COMBAK. >
-                let g:TagmaTasksTokens = ['FIXME', 'TODO', 'NOTE', 'XXX', 'COMBAK']
+	Task Tokens to search for when generating the Task List.
+	The Tokens must NOT contain a '/' or the plugin will fail.
+	Defaults to FIXME, TODO, NOTE, XXX and COMBAK. >
+		let g:TagmaTasksTokens = ['FIXME', 'TODO', 'NOTE', 'XXX', 'COMBAK']
 <
 
 ==============================================================================
-TASK MARKS                                      *tagmatasks-marks*
+TASK MARKS					*tagmatasks-marks*
 
 Marks are displayed next to each line that has a Task Token on it. These marks
 are ordered by significance. The Markers are highlighted by significance. With
