@@ -41,6 +41,12 @@ Commands created for user use.
 		Display the task window, optionally jumping to the first task.
 		Mark each line the task appears on.
 
+	A list of files can be passed to grep across. If a file list is passed
+	the |quickfix| error list is used in place of the location list for
+	the current buffer. The error list window is always opened
+	automatically. The other TagmaTask commands will not affect the error
+	list window.
+
 :TagmaTaskMarks					*TagmaTaskMarks*
 	Display the Task Marks.
 

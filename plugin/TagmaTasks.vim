@@ -57,7 +57,7 @@ call s:SetDefault('g:TagmaTasksTokens',     ['FIXME', 'TODO', 'NOTE', 'XXX', 'CO
 delfunction s:SetDefault
 
 " Section: User Commands {{{1
-command! -nargs=0 TagmaTasks        call TagmaTasks#Generate()
+command! -nargs=* TagmaTasks        call TagmaTasks#Generate('', "<args>")
 command! -nargs=0 TagmaTaskClear    call TagmaTasks#Clear()
 command! -nargs=0 TagmaTaskMarks    call TagmaTasks#Marks()
 command! -nargs=0 TagmaTaskToggle   call TagmaTasks#Window()

@@ -68,33 +68,39 @@ endfunction
 " Display a list of tasks using the location list.
 " Opens the list window if not already open.
 " When 'A' is passed will only perform an update. (Auto Update)
+" A list of files to grep can be passed. See the command TagmaTasks.
 function! TagmaTasks#Generate(...)
     " The current buffer.
     let l:bufnr = bufnr('%')
 
     " Note if doing an auto update.
-    let l:auto_update = a:0 == 1 && a:1 == 'A'
+    let l:auto_update = a:0 != 0 && a:1 == 'A'
+
+    " Note if working on files or the current buffer.
+    let l:grep_files = a:0 == 2 && a:2 != ''
+    let l:file_list = (l:grep_files ? a:2 : '%')
 
     " The grep command.
-    let l:grep_cmd = 'silent lvimgrep /\C\<\('
+    let l:grep_cmd = (l:grep_files ? '' : 'silent l') . 'vimgrep /\C\<\('
     let l:grep_cmd .= join(g:TagmaTasksTokens, '\|')
     let l:grep_cmd .= '\)\>/'
-    if !g:TagmaTasksJumpTask || l:auto_update
+    if !g:TagmaTasksJumpTask || l:auto_update || l:grep_files
         " Do not jump to the first Task.
         let l:grep_cmd .= 'j'
     endif
+    let l:grep_cmd .= ' ' . l:file_list
 
-    " Grep the current file for the task items.
-    silent! exec l:grep_cmd . ' %'
+    " Grep for the task items.
+    silent! exec l:grep_cmd
 
     " Make sure tasks were found before proceeding.
-    if len(getloclist(0)) == 0
+    if len(getloclist(0)) == 0 && !l:grep_files
         echomsg 'No tasks found.'
         return
     endif
 
     " First time for this buffer?
-    if !exists('b:TagmaTasksHasTasks')
+    if !exists('b:TagmaTasksHasTasks') && !l:grep_files
         " Note that this buffer now has Tasks.
         let b:TagmaTasksHasTasks = 1
 
@@ -113,13 +119,17 @@ function! TagmaTasks#Generate(...)
     endif
 
     " Generate the Marks.
-    " Skipped when autoupdating and Marks are not visible.
-    if g:TagmaTasksMarks && !(l:auto_update && !b:TagmaTasksMarksVisible)
+    " Skipped when autoupdating and Marks are not visible or working on a list
+    " of files.
+    if g:TagmaTasksMarks && !(l:auto_update && !b:TagmaTasksMarksVisible) &&
+                \ !l:grep_files
         call TagmaTasks#Marks()
     endif
 
     " Open Task List Window
-    if g:TagmaTasksOpen && !l:auto_update
+    if l:grep_files
+        exec 'copen ' . g:TagmaTasksHeight
+    elseif g:TagmaTasksOpen && !l:auto_update
         if exists('b:TagmaTaskLocBufNr')
             unlet b:TagmaTaskLocBufNr
         endif
