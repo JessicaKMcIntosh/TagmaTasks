@@ -1,6 +1,6 @@
 *TagmaTasks.txt* IDE like Tasks for Vim
                              For Vim version 7.x.
-                  Last Changed: Fri Feb 03 12:41 PM 2012 EST
+                  Last Changed: Fri Mar 16 01:06 PM 2012 EDT
                     https://github.com/LStinson/TagmaTasks
              http://www.vim.org/scripts/script.php?script_id=3765
                         By Lorance Stinson AT Gmail...
@@ -23,6 +23,11 @@ task line using the Vim |signs| feature.
 The Task List is generated using the |lvimgrep| command. See that command for
 specifics on how the Task List is generated
 
+A Task List can also be generated for a list of files. This mode uses
+|vimgrep| and the |quickfix-error-lists| window. The file list can be
+anything |vimgrep| accepts. The error list window will always be opened when
+generating a Task List for a file list.
+
 ==============================================================================
 INSTALLATION					*tagmatasks-installation*
 
@@ -40,6 +45,17 @@ Commands created for user use.
 	Depending on settings will:
 		Display the task window, optionally jumping to the first task.
 		Mark each line the task appears on.
+
+	A list of files can be passed to grep across. If a file list is passed
+	the |quickfix| error list is used in place of the location list for
+	the current buffer. The error list window is always opened
+	automatically. The other TagmaTask commands will not affect the error
+	list window.
+	Examples: >
+	TagmaTasks *.pl ; Task List for all .pl files.
+	TagmaTasks *	; Task List for all files in the current directory.
+	TagmaTasks **/* ; Task List for all files including subdirectories.
+<
 
 :TagmaTaskMarks					*TagmaTaskMarks*
 	Display the Task Marks.
@@ -178,4 +194,4 @@ other Tokens have normal highlighting.
  XXX    | TX     | Normal
  OTHER  | T=     | Normal
 
- vim:ts=8:sw=8:tw=78:ft=help:
+ vim:ts=8 sw=8 sts=8 noet tw=78 ft=help:
