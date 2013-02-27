@@ -1,7 +1,7 @@
 " vim:foldmethod=marker
 " =============================================================================
 " File:         TagmaTasks.vim (Autoload)
-" Last Changed: Fri, Jan 20, 2012
+" Last Changed: Wed Feb 27 02:50 PM 2013 EST
 " Maintainer:   Lorance Stinson AT Gmail...
 " License:      Public Domain
 "
@@ -167,7 +167,7 @@ function! TagmaTasks#Window()
 
     " If there are no tasks can't open the window.
     if !exists ('b:TagmaTasksHasTasks')
-        call TagmaTasks#Error()
+        call TagmaTasks#Generate()
         return
     endif
 
