@@ -1,6 +1,6 @@
 *TagmaTasks.txt* IDE like Tasks for Vim
                              For Vim version 7.x.
-                  Last Changed: Fri Mar 16 01:06 PM 2012 EDT
+                  Last Changed: Wed Feb 27 03:16 PM 2013 EST
                     https://github.com/LStinson/TagmaTasks
              http://www.vim.org/scripts/script.php?script_id=3765
                         By Lorance Stinson AT Gmail...
@@ -176,6 +176,14 @@ g:TagmaTasksTokens
 	The Tokens must NOT contain a '/' or the plugin will fail.
 	Defaults to FIXME, TODO, NOTE, XXX and COMBAK. >
 		let g:TagmaTasksTokens = ['FIXME', 'TODO', 'NOTE', 'XXX', 'COMBAK']
+<
+
+g:TagmaTasksRegexp
+	|Regexp| to search for tasks. Replaces the tokens defined in
+	g:TagmaTasksTokens.
+	The |regex| must NOT contain a '/' or the plugin will fail.
+	Defaults to an empty string. >
+		let g:TagmaTasksRegexp = '\<TODO\|TASK\>'
 <
 
 ==============================================================================

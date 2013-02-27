@@ -1,7 +1,7 @@
 " vim:foldmethod=marker
 " =============================================================================
 " File:         TagmaTasks.vim (Autoload)
-" Last Changed: Wed Feb 27 02:50 PM 2013 EST
+" Last Changed: Wed Feb 27 03:14 PM 2013 EST
 " Maintainer:   Lorance Stinson AT Gmail...
 " License:      Public Domain
 "
@@ -81,9 +81,14 @@ function! TagmaTasks#Generate(...)
     let l:file_list = (l:grep_files ? a:2 : '%')
 
     " The grep command.
-    let l:grep_cmd = (l:grep_files ? '' : 'silent l') . 'vimgrep /\C\<\('
-    let l:grep_cmd .= join(g:TagmaTasksTokens, '\|')
-    let l:grep_cmd .= '\)\>/'
+    let l:grep_cmd = (l:grep_files ? '' : 'silent l')
+    if g:TagmaTasksRegexp != ''
+        let l:grep_cmd .= 'vimgrep /' . g:TagmaTasksRegexp . '/'
+    else
+        let l:grep_cmd .= 'vimgrep /\C\<\('
+        let l:grep_cmd .= join(g:TagmaTasksTokens, '\|')
+        let l:grep_cmd .= '\)\>/'
+    endif
     if !g:TagmaTasksJumpTask || l:auto_update || l:grep_files
         " Do not jump to the first Task.
         let l:grep_cmd .= 'j'

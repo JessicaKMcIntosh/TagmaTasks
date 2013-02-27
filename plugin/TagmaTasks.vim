@@ -1,7 +1,7 @@
 " vim:foldmethod=marker
 " =============================================================================
 " File:         TagmaTasks.vim (Plugin)
-" Last Changed: Fri, Jan 20, 2012
+" Last Changed: Wed Feb 27 03:12 PM 2013 EST
 " Maintainer:   Lorance Stinson AT Gmail...
 " License:      Public Domain
 "
@@ -52,6 +52,10 @@ call s:SetDefault('g:TagmaTasksPrefix',     '<Leader>t')
 
 " Task Tokens to search for.
 call s:SetDefault('g:TagmaTasksTokens',     ['FIXME', 'TODO', 'NOTE', 'XXX', 'COMBAK'])
+
+" Regex to search for tokens.
+" Replaces the search composed from TagmaTasksTokens if defined.
+call s:SetDefault('g:TagmaTasksRegexp',     '')
 
 " No need for the function any longer.
 delfunction s:SetDefault
