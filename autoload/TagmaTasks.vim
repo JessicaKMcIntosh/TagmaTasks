@@ -54,9 +54,9 @@ endfunction
 " Function: TagmaTasks#Error()          -- Displays an error that there are no tasks. {{{1
 function! TagmaTasks#Error()
     echohl warningmsg
-    let l:msg = 'This buffer has no tasks. run tagmatasks'
+    let l:msg = 'This buffer has no tasks. Run :TagmaTasks'
     if g:TagmaTasksPrefix != ''
-        let l:msg .= 'or type ' . g:TagmaTasksPrefix . 't'
+        let l:msg .= ' or type ' . g:TagmaTasksPrefix . 't'
     endif
     let l:msg .= ' to generate the Task List.'
     echo l:msg
